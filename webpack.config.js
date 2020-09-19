@@ -1,9 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
 
 module.exports = {
-    entry = './app/index.js',
+    entry: './app/index.js',
     module: {
         rules: [
             { test: /\.svg$/, use: 'svg-inline-loader' },
@@ -13,10 +12,12 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: index_bundle.js
+        filename: 'index_bundle.js'
     },
     plugins: [
-        new HtmlWebpackPlugin()
+        new HtmlWebpackPlugin({
+            template: 'app/index.html'
+        })
     ],
     mode: process.env.NODE_ENV = 'production' ? 'production' : 'development'
 }
