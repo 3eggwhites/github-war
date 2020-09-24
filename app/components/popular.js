@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { fetchPopulaRepos } from '../utils/api';
 // Font Awesome
 import { FaUser, FaStar, FaCodeBranch, FaExclamationTriangle } from 'react-icons/fa';
+import { fetchPopulaRepos } from '../utils/api';
+import Cards from './cards';
+import Loading from './loading';
 
 
 function LanguagesNav({selected, onUpdateLanguage}) {
@@ -37,19 +39,14 @@ function ReposGrid({ repos }) {
                     const { login, avatar_url } = owner;
 
                     return (
-                        <li key = {html_url} className='card bg-light'>
-                            <h4 className='header-lg center-text'>
-                                #{index+1}
-                            </h4>
-                            <img
-                                src={avatar_url}
-                                alt={`Avatar for ${login}`}
-                                className='avatar'
-                            />
-                            <h2 className='center-text'>
-                                <a href={html_url} className='link'>{login}</a>
-                            </h2>
-                            <ul className='card-list'>
+                        <li key = {html_url}>
+                            <Cards
+                                header={`#${index+1}`}
+                                avatar={avatar_url}
+                                href={html_url}
+                                name={login}>
+
+                                <ul className='card-list'>
                                 <li>
                                     <FaUser color='rgb(255,191,116)' size={22}/>
                                     <a href={`https://github.com/${login}`}> {login} </a>
@@ -66,7 +63,8 @@ function ReposGrid({ repos }) {
                                     <FaExclamationTriangle color='rgb(241,138,147)' size={22}/>
                                     {open_issues.toLocaleString()} open issues
                                 </li>
-                            </ul>
+                                </ul>
+                            </Cards>
                         </li>
                     )
                 })
@@ -139,7 +137,7 @@ class Popular extends React.Component {
             onUpdateLanguage = {this.updateLanguageSelection}
             />
 
-            {this.isLoading() && <p>Loading...</p>}
+            {this.isLoading() && <p> <Loading text='Fetching Repos'/></p>}
 
             {error && <p className='center-text error'>{error}</p>}
 

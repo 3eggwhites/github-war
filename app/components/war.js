@@ -130,6 +130,7 @@ export default class War extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleReset = this.handleReset.bind(this);
+        this.resetBattle = this.resetBattle.bind(this);
     }
 
     handleSubmit(id, player) {
@@ -144,11 +145,19 @@ export default class War extends React.Component {
         })
     }
 
+    resetBattle() {
+        this.setState({
+            playerOne: null,
+            playerTwo: null,
+            battle: false
+        })
+    }
+
     render() {
         const { playerOne, playerTwo, battle } = this.state
 
         if (battle === true) {
-            return <Results playerOne={playerOne} playerTwo={playerTwo}/>
+            return <Results playerOne={playerOne} playerTwo={playerTwo} resetBattle={this.resetBattle}/>
         }
 
         return(

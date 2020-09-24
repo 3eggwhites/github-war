@@ -1,6 +1,44 @@
 import React from 'react';
-import { war } from '../utils/api'
-import { FaUser, FaCompass, FaBriefcase, FaUserFriends, FaUsers } from 'react-icons/fa'
+import { war } from '../utils/api';
+import { FaUser, FaCompass, FaBriefcase, FaUserFriends, FaUsers } from 'react-icons/fa';
+import PropType from 'prop-types';
+import Cards from './cards';
+import Loading from './loading';
+
+function ProfileList({ profile }) {
+    return (
+        <ul className='card-list'>
+            <li>
+            <FaUser color='rgb(239, 115, 115)' size={22} />
+            {profile.name}
+            </li>
+            {profile.location && (
+            <li>
+                <FaCompass color='rgb(144, 115, 255)' size={22} />
+                {profile.location}
+            </li>
+            )}
+            {profile.company && (
+            <li>
+                <FaBriefcase color='#795548' size={22} />
+                {profile.company}
+            </li>
+            )}
+            <li>
+            <FaUsers color='rgb(129, 195, 245)' size={22} />
+            {profile.followers.toLocaleString()} followers
+            </li>
+            <li>
+            <FaUserFriends color='rgb(64, 183, 95)' size={22} />
+            {profile.following.toLocaleString()} following
+            </li>
+        </ul>
+    )
+}
+
+ProfileList.propTypes = {
+    profile: PropType.object.isRequired
+}
 
 export default class Results extends React.Component {
     constructor(props) {
@@ -8,7 +46,7 @@ export default class Results extends React.Component {
         
         this.state = {
             winner: null,
-            looser: null,
+            loser: null,
             error: null,
             loading: true
         }
@@ -20,7 +58,7 @@ export default class Results extends React.Component {
             .then((players) => {
                 this.setState({
                     winner: players[0],
-                    looser: players[1],
+                    loser: players[1],
                     error: null,
                     loading: false
                 })
@@ -33,12 +71,10 @@ export default class Results extends React.Component {
     }
 
     render() {
-        const { winner, looser, loading, error } = this.state;
+        const { winner, loser, loading, error } = this.state;
 
         if (loading === true) {
-            return (
-                <p>LOADING</p>
-            )
+            return <Loading text='Battling'/>
         }
 
         if (error) {
@@ -50,96 +86,39 @@ export default class Results extends React.Component {
         }
 
         return (
-            <div className='grid space-around container-sm'>
-                <div className='card bg-light'>
-                    <h4 className='header-lg center-text'>
-                        {winner.score === looser.score ? 'Tie' : 'Winner'}
-                    </h4>
-                    <img
-                        src={winner.profile.avatar_url}
-                        alt={`Avatar for ${winner.profile.login}`}
-                        className='avatar'
-                    />
-                    <h4 className='center-text'>
-                        Score: {winner.score.toLocaleString()}
-                    </h4>
-                    <h2 className='center-text'>
-                        <a className='link' href={winner.profile.html_url}>
-                        {winner.profile.login}
-                        </a>
-                    </h2>
-                    <ul className='card-list'>
-                        <li>
-                        <FaUser color='rgb(239, 115, 115)' size={22} />
-                        {winner.profile.name}
-                        </li>
-                        {winner.profile.location && (
-                        <li>
-                            <FaCompass color='rgb(144, 115, 255)' size={22} />
-                            {winner.profile.location}
-                        </li>
-                        )}
-                        {winner.profile.company && (
-                        <li>
-                            <FaBriefcase color='#795548' size={22} />
-                            {winner.profile.company}
-                        </li>
-                        )}
-                        <li>
-                        <FaUsers color='rgb(129, 195, 245)' size={22} />
-                        {winner.profile.followers.toLocaleString()} followers
-                        </li>
-                        <li>
-                        <FaUserFriends color='rgb(64, 183, 95)' size={22} />
-                        {winner.profile.following.toLocaleString()} following
-                        </li>
-                    </ul>
+            <React.Fragment>
+                <div className='grid space-around container-sm'>
+                    <Cards
+                        header={winner.score === loser.score ? 'Tie' : 'Winner'}
+                        subheader={`Score: ${winner.score.toLocaleString()}`}
+                        avatar={winner.profile.avatar_url}
+                        href={winner.profile.html_url}
+                        name={winner.profile.login} >
+
+                        <ProfileList profile={winner.profile} />
+                    </Cards>
+                    <Cards
+                        header={winner.score === loser.score ? 'Tie' : 'loser'}
+                        subheader={`Score: ${loser.score.toLocaleString()}`}
+                        avatar={loser.profile.avatar_url}
+                        href={loser.profile.html_url}
+                        name={loser.profile.login}>
+
+                        <ProfileList profile={loser.profile} />
+                    </Cards>
                 </div>
-                <div className='card bg-light'>
-                    <h4 className='header-lg center-text'>
-                        {winner.score === looser.score ? 'Tie' : 'Looser'}
-                    </h4>
-                    <img
-                        src={looser.profile.avatar_url}
-                        alt={`Avatar for ${looser.profile.login}`}
-                        className='avatar'
-                    />
-                    <h4 className='center-text'>
-                        Score: {looser.score.toLocaleString()}
-                    </h4>
-                    <h2 className='center-text'>
-                        <a className='link' href={looser.profile.html_url}>
-                        {looser.profile.login}
-                        </a>
-                    </h2>
-                    <ul className='card-list'>
-                        <li>
-                        <FaUser color='rgb(239, 115, 115)' size={22} />
-                        {looser.profile.name}
-                        </li>
-                        {looser.profile.location && (
-                        <li>
-                            <FaCompass color='rgb(144, 115, 255)' size={22} />
-                            {looser.profile.location}
-                        </li>
-                        )}
-                        {looser.profile.company && (
-                        <li>
-                            <FaBriefcase color='#795548' size={22} />
-                            {looser.profile.company}
-                        </li>
-                        )}
-                        <li>
-                        <FaUsers color='rgb(129, 195, 245)' size={22} />
-                        {looser.profile.followers.toLocaleString()} followers
-                        </li>
-                        <li>
-                        <FaUserFriends color='rgb(64, 183, 95)' size={22} />
-                        {looser.profile.following.toLocaleString()} following
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                <button
+                    className='btn btn-dark btn-space'
+                    onClick={() => this.props.resetBattle()}>
+                    Reset
+                </button>
+            </React.Fragment>
         )
     }
+}
+
+Results.propTypes ={
+    playerOne: PropType.string.isRequired,
+    playerTwo: PropType.string.isRequired,
+    resetBattle: PropType.func.isRequired
 }
