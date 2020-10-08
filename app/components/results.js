@@ -1,36 +1,45 @@
 import React from 'react';
-import { war } from '../utils/api';
+import { Link } from 'react-router-dom';
 import { FaUser, FaCompass, FaBriefcase, FaUserFriends, FaUsers } from 'react-icons/fa';
 import PropType from 'prop-types';
+import queryString from 'query-string';
+import { war } from '../utils/api';
 import Cards from './cards';
 import Loading from './loading';
+import Tooltip from './tooltip'
+import ToolTip from './tooltip';
+
 
 function ProfileList({ profile }) {
     return (
         <ul className='card-list'>
             <li>
-            <FaUser color='rgb(239, 115, 115)' size={22} />
-            {profile.name}
+                <FaUser color='rgb(239, 115, 115)' size={22} />
+                {profile.name}
             </li>
             {profile.location && (
-            <li>
-                <FaCompass color='rgb(144, 115, 255)' size={22} />
-                {profile.location}
-            </li>
+                <ToolTip hoverText={'USer\'s location'}>
+                    <li>
+                        <FaCompass color='rgb(144, 115, 255)' size={22} />
+                        {profile.location}
+                    </li>
+                </ToolTip>
             )}
             {profile.company && (
-            <li>
-                <FaBriefcase color='#795548' size={22} />
-                {profile.company}
-            </li>
+                <Tooltip hoverText={'User\'s company'}>
+                    <li>
+                        <FaBriefcase color='#795548' size={22} />
+                        {profile.company}
+                    </li>
+                </Tooltip>
             )}
             <li>
-            <FaUsers color='rgb(129, 195, 245)' size={22} />
-            {profile.followers.toLocaleString()} followers
+                <FaUsers color='rgb(129, 195, 245)' size={22} />
+                {profile.followers.toLocaleString()} followers
             </li>
             <li>
-            <FaUserFriends color='rgb(64, 183, 95)' size={22} />
-            {profile.following.toLocaleString()} following
+                <FaUserFriends color='rgb(64, 183, 95)' size={22} />
+                {profile.following.toLocaleString()} following
             </li>
         </ul>
     )
@@ -43,7 +52,7 @@ ProfileList.propTypes = {
 export default class Results extends React.Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
             winner: null,
             loser: null,
@@ -52,7 +61,7 @@ export default class Results extends React.Component {
         }
     }
     componentDidMount() {
-        const { playerOne, playerTwo } = this.props;
+        const { playerOne, playerTwo } = queryString.parse(this.props.location.search);
 
         war([playerOne, playerTwo])
             .then((players) => {
@@ -62,7 +71,7 @@ export default class Results extends React.Component {
                     error: null,
                     loading: false
                 })
-            }).catch(({message}) => {
+            }).catch(({ message }) => {
                 this.setState({
                     error: message,
                     loading: false
@@ -74,7 +83,7 @@ export default class Results extends React.Component {
         const { winner, loser, loading, error } = this.state;
 
         if (loading === true) {
-            return <Loading text='Battling'/>
+            return <Loading text='Battling' />
         }
 
         if (error) {
@@ -107,18 +116,13 @@ export default class Results extends React.Component {
                         <ProfileList profile={loser.profile} />
                     </Cards>
                 </div>
-                <button
+                <Link
                     className='btn btn-dark btn-space'
-                    onClick={() => this.props.resetBattle()}>
+                    to='/war'
+                >
                     Reset
-                </button>
+                </Link>
             </React.Fragment>
         )
     }
-}
-
-Results.propTypes ={
-    playerOne: PropType.string.isRequired,
-    playerTwo: PropType.string.isRequired,
-    resetBattle: PropType.func.isRequired
 }

@@ -5,24 +5,25 @@ import { FaUser, FaStar, FaCodeBranch, FaExclamationTriangle } from 'react-icons
 import { fetchPopulaRepos } from '../utils/api';
 import Cards from './cards';
 import Loading from './loading';
+import ToolTip from './tooltip';
 
 
-function LanguagesNav({selected, onUpdateLanguage}) {
+function LanguagesNav({ selected, onUpdateLanguage }) {
     const languages = ['All', 'Javascript', 'Java', 'Python', 'CSS', 'Ruby'];
 
-        return (
-            <ul className="flex-center">
-                {languages.map((language, index) => (
-                    <li key={index}>
-                        <button className="btn-clear nav-link"
-                        style={language === selected ? {color: 'rgb(179, 0, 0)'} : null}
+    return (
+        <ul className="flex-center">
+            {languages.map((language, index) => (
+                <li key={index}>
+                    <button className="btn-clear nav-link"
+                        style={language === selected ? { color: 'rgb(179, 0, 0)' } : null}
                         onClick={() => onUpdateLanguage(language)}>
-                            {language}
-                        </button>
-                    </li>
-                ))}
-            </ul>
-        )
+                        {language}
+                    </button>
+                </li>
+            ))}
+        </ul>
+    )
 }
 
 LanguagesNav.propTypes = {
@@ -39,29 +40,31 @@ function ReposGrid({ repos }) {
                     const { login, avatar_url } = owner;
 
                     return (
-                        <li key = {html_url}>
+                        <li key={html_url}>
                             <Cards
-                                header={`#${index+1}`}
+                                header={`#${index + 1}`}
                                 avatar={avatar_url}
                                 href={html_url}
                                 name={login}>
 
                                 <ul className='card-list'>
-                                <li>
-                                    <FaUser color='rgb(255,191,116)' size={22}/>
-                                    <a href={`https://github.com/${login}`}> {login} </a>
+                                    <li>
+                                        <ToolTip hoverText={'Github username'}>
+                                            <FaUser color='rgb(255,191,116)' size={22} />
+                                            <a href={`https://github.com/${login}`}> {login} </a>
+                                        </ToolTip>
+                                    </li>
+                                    <li>
+                                        <FaStar color='rgb(255,215,0)' size={22} />
+                                        {stargazers_count.toLocaleString()} stars
                                 </li>
-                                <li>
-                                    <FaStar color='rgb(255,215,0)' size={22}/>
-                                    {stargazers_count.toLocaleString()} stars
+                                    <li>
+                                        <FaCodeBranch color='rgb(129, 195, 245)' size={22} />
+                                        {forks.toLocaleString()} forks
                                 </li>
-                                <li>
-                                    <FaCodeBranch color='rgb(129, 195, 245)' size={22}/>
-                                    {forks.toLocaleString()} forks
-                                </li>
-                                <li>
-                                    <FaExclamationTriangle color='rgb(241,138,147)' size={22}/>
-                                    {open_issues.toLocaleString()} open issues
+                                    <li>
+                                        <FaExclamationTriangle color='rgb(241,138,147)' size={22} />
+                                        {open_issues.toLocaleString()} open issues
                                 </li>
                                 </ul>
                             </Cards>
@@ -105,21 +108,21 @@ class Popular extends React.Component {
         if (!this.state.repos[selectedLanguage]) {
 
             fetchPopulaRepos(selectedLanguage)
-            .then((data) => {
-                this.setState(({ repos }) => ({
-                    repos: {
-                        ...repos,
-                        [selectedLanguage]: data
-                    }
-                }))
-            })
-            .catch((e) => {
-                console.warn('Error fetching repos', e);
-
-                this.setState({
-                    error: 'Unable to fetch repos due to error'
+                .then((data) => {
+                    this.setState(({ repos }) => ({
+                        repos: {
+                            ...repos,
+                            [selectedLanguage]: data
+                        }
+                    }))
                 })
-            })
+                .catch((e) => {
+                    console.warn('Error fetching repos', e);
+
+                    this.setState({
+                        error: 'Unable to fetch repos due to error'
+                    })
+                })
         }
     }
 
@@ -132,16 +135,16 @@ class Popular extends React.Component {
         const { selectedLanguage, repos, error } = this.state;
         return (
             <React.Fragment>
-            <LanguagesNav
-            selected = {selectedLanguage}
-            onUpdateLanguage = {this.updateLanguageSelection}
-            />
+                <LanguagesNav
+                    selected={selectedLanguage}
+                    onUpdateLanguage={this.updateLanguageSelection}
+                />
 
-            {this.isLoading() && <p> <Loading text='Fetching Repos'/></p>}
+                {this.isLoading() && <p> <Loading text='Fetching Repos' /></p>}
 
-            {error && <p className='center-text error'>{error}</p>}
+                {error && <p className='center-text error'>{error}</p>}
 
-            {repos[selectedLanguage] && <ReposGrid repos={repos[selectedLanguage]}/>}
+                {repos[selectedLanguage] && <ReposGrid repos={repos[selectedLanguage]} />}
 
             </React.Fragment>
         )
