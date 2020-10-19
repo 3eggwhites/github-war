@@ -1,7 +1,6 @@
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-console.log('CLIENT_ID ' + CLIENT_ID);
-console.log('CLIENT_SECRET ' + CLIENT_SECRET);
+console.log('CLIENT_ID ' + JSON.stringify(process.env));
 
 const params = `?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`;
 
