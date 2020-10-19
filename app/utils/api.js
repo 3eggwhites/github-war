@@ -2,7 +2,8 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 console.log('CLIENT_ID ' + JSON.stringify(process.env));
 
-const params = `?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`;
+// const params = `?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`;
+const params = '';
 
 
 function getErrorMessage(userName, errorMessage) {
