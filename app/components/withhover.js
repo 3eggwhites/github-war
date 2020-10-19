@@ -2,24 +2,18 @@ import React from 'react';
 
 export default function withHover(Component, propName = 'hovering') {
     return class WithHover extends React.Component {
-        constructor(props) {
-            super(props);
 
-            this.state = {
-                [propName]: false
-            }
-
-            this.onMouseOver = this.onMouseOver.bind(this);
-            this.onMouseOut = this.onMouseOut.bind(this);
+        state = {
+            [propName]: false
         }
 
-        onMouseOver() {
+        onMouseOver = () => {
             this.setState({
                 [propName]: true
             });
         }
 
-        onMouseOut() {
+        onMouseOut = () => {
             this.setState({
                 [propName]: false
             });
