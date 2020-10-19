@@ -1,4 +1,5 @@
-
+const CLIENT_ID = '<>';
+const CLIENT_SECRET = '<>';
 
 const params = `?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`;
 
