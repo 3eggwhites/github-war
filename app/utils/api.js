@@ -28,7 +28,7 @@ function getProfile(userName) {
 }
 
 function getRepos(userName) {
-    return fetch(`https://api.github.com/users/${userName}/repos${params}&per_page=100`)
+    return fetch(`https://api.github.com/users/${userName}/repos${params}?per_page=100`)
         .then((res) => res.json())
         .then((repos) => {
 
