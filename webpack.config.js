@@ -1,6 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
   entry: "./src/index.tsx",
   target: "web",
@@ -10,6 +10,7 @@ module.exports = {
     filename: "index.js",
   },
   devServer: {
+    port: 3030,
     contentBase: path.resolve(__dirname, './dist')
   },
   resolve: {
@@ -37,8 +38,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src", "index.html"),
     }),
-    /*new MiniCssExtractPlugin({
+    new MiniCssExtractPlugin({
       filename: "./src/index.scss",
-    }),*/
+    }),
   ],
 };
