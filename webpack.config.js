@@ -29,8 +29,8 @@ module.exports = {
         loader: "source-map-loader",
       },
       {
-        test: /\.css$/,
-        loader: "css-loader",
+        test: /\.(sa|sc|c)ss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
   },
@@ -39,7 +39,7 @@ module.exports = {
       template: path.resolve(__dirname, "src", "index.html"),
     }),
     new MiniCssExtractPlugin({
-      filename: "./src/index.scss",
+      filename: "index.css",
     }),
   ],
 };
